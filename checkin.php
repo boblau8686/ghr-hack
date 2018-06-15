@@ -1,16 +1,30 @@
 <?php
 // 使用ShowApi接口获取法定节假日安排
 include "extend/showapi.php";
-$todayInfo = holiday2018(date('Ymd'));
-// 判断今天是否是工作日，非工作日则退出。
-if ($todayInfo['showapi_res_body']['type'] != 1) {
+
+// 创建Runtime目录
+$runtimeDir = dirname(__FILE__) . '/runtime/';
+if (!is_dir($runtimeDir)) {
+    mkdir($runtimeDir, 0755);
+}
+
+// 生成当天假日信息缓存
+$todayNum = date('Ymd');
+$holidayFilename = $runtimeDir . 'holiday' . $todayNum;
+if (!file_exists($holidayFilename)) {
+    $todayInfo = holiday2018($todayNum);
+    // 将今天的假日信息写入缓存文件
+    file_put_contents($holidayFilename, $todayInfo['showapi_res_body']['type']);
+}
+
+// 判断今天是否非工作日，如果是则退出。
+$holidayInfo = file_get_contents($holidayFilename);
+if ($holidayInfo != '1') {
     exit;
 }
 
-// 脚本不超时
-set_time_limit(0);
 
-// 基本配置
+// GHR配置
 $baseUrl = 'http://hr.baodao.com.cn:1001/AppWebService/GhrApp.asmx/';
 $loginMethod = 'Login';
 $checkinMethod = 'InsertStaffCardRecord';
@@ -48,16 +62,17 @@ $amRandMinute = rand(1, 58);
 $pmRandMinute = rand($amRandMinute, 59);
 
 // 签到日志字符串
-$logStr = date('Y-m-d') . ':' . '09' . str_pad($amRandMinute, 2, '0', STR_PAD_LEFT) . '&19' . str_pad($pmRandMinute, 2, '0', STR_PAD_LEFT);
+$todayDate = date('Y-m-d');
+$logStr = $todayDate . ':' . '09' . str_pad($amRandMinute, 2, '0', STR_PAD_LEFT) . '&19' . str_pad($pmRandMinute, 2, '0', STR_PAD_LEFT);
 
 // 获取签到记录
-$checkinFilename = dirname(__FILE__) . '/checkin.log';
+$checkinFilename = $runtimeDir . 'datetime';
 if (!file_exists($checkinFilename)) {
     file_put_contents($checkinFilename, $logStr);
 } else {
     $checkinLog = file_get_contents($checkinFilename);
     $checkinLogInfo = explode(':', $checkinLog);
-    if (strtotime($checkinLogInfo[0]) < strtotime(date('Y-m-d'))) {
+    if (strtotime($checkinLogInfo[0]) < strtotime($todayDate)) {
         file_put_contents($checkinFilename, $logStr);
     } elseif (in_array(date('Hi'), explode('&', trim($checkinLogInfo[1])))) { // 等于当前的随机时间才签到
         // 签到数据
