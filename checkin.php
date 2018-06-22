@@ -63,7 +63,7 @@ $pmRandMinute = rand($amRandMinute, 59);
 
 // 签到日志字符串
 $todayDate = date('Y-m-d');
-$logStr = $todayDate . ':' . '09' . str_pad($amRandMinute, 2, '0', STR_PAD_LEFT) . '&19' . str_pad($pmRandMinute, 2, '0', STR_PAD_LEFT);
+$logStr = $todayDate . ':' . '09' . str_pad($amRandMinute, 2, '0', STR_PAD_LEFT) . '&18' . str_pad($pmRandMinute, 2, '0', STR_PAD_LEFT);
 
 // 获取签到记录
 $checkinFilename = $runtimeDir . 'datetime';
