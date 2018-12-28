@@ -12,7 +12,7 @@ if (!is_dir($runtimeDir)) {
 $todayNum = date('Ymd');
 $holidayFilename = $runtimeDir . 'holiday' . $todayNum;
 if (!file_exists($holidayFilename)) {
-    $todayInfo = holiday2018($todayNum);
+    $todayInfo = holiday($todayNum);
     // 将今天的假日信息写入缓存文件
     file_put_contents($holidayFilename, $todayInfo['showapi_res_body']['type']);
 }
@@ -96,11 +96,21 @@ if (!file_exists($checkinFilename)) {
         $response = curl_exec($ch);
 
         $checkResult = json_decode(simplexml_load_string($response), 1);
-        echo date('Y-m-d H:i:s') . ':' . json_encode($checkResult) . "\n";
+        $log = date('Y-m-d H:i:s') . ':' . json_encode($checkResult) . "\n";
+        echo $log;
 
         // 签到不成功则报警
         if ($checkResult['Msg'] != 'ok') {
-            // TODO
+            // 发送QQ邮件
+            require_once 'extend/QQMailer.php';
+            $mailer = new QQMailer();
+            $title = $todayNum . ' GHR签到失败';
+            $content = $log;
+            try {
+                $mailer->send('boblau8686@qq.com', $title, $content);
+            } catch (\PHPMailer\PHPMailer\Exception $e) {
+                echo 'Send Mail Fail: ' . $e->getMessage() . "\n";
+            }
         }
     }
 }

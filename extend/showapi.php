@@ -26,11 +26,11 @@ function createParam($paramArr, $showapi_secret) {
 }
 
 /**
- * 2018节假日接口
+ * 节假日接口
  * @param string $day 日期
  * @return array
  */
-function holiday2018($day) {
+function holiday($day) {
     //md5签名方式--非简单签名
     header("Content-Type:text/html;charset=UTF-8");
     date_default_timezone_set("PRC");
