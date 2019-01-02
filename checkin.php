@@ -98,18 +98,20 @@ if (!file_exists($checkinFilename)) {
         $log = date('Y-m-d H:i:s') . ':' . json_encode($checkResult) . "\n";
         echo $log;
 
-        // 签到不成功则报警
-        if ($checkResult['Msg'] != 'ok') {
-            // 发送QQ邮件
-            require_once 'extend/QQMailer.php';
-            $mailer = new QQMailer();
-            $title = $todayNum . ' GHR签到失败';
-            $content = $log;
-            try {
-                $mailer->send('boblau8686@qq.com', $title, $content);
-            } catch (\PHPMailer\PHPMailer\Exception $e) {
-                echo 'Send Mail Fail: ' . $e->getMessage() . "\n";
-            }
+        // 签到完成发送通知邮件
+        if ($checkResult['Msg'] == 'ok') {
+            $title = $todayNum . ' GHR签到成功';
+        } else {
+            $title = '【签到失败】：' . $todayNum . ' GHR签到失败';
+        }
+        // 发送QQ邮件
+        require_once 'extend/QQMailer.php';
+        $mailer = new QQMailer();
+        $content = $log;
+        try {
+            $mailer->send('boblau8686@qq.com', $title, $content);
+        } catch (\PHPMailer\PHPMailer\Exception $e) {
+            echo 'Send Mail Fail: ' . $e->getMessage() . "\n";
         }
     }
 }
