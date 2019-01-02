@@ -43,7 +43,7 @@ function holiday($day) {
     ];
 
     $param = createParam($paramArr, $showapi_secret);
-    $url = 'http://route.showapi.com/894-2?' . $param;
+    $url = 'http://route.showapi.com/894-3?' . $param;
     $result = file_get_contents($url);
     return json_decode($result, true);
 }

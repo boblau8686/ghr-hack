@@ -16,7 +16,6 @@ if (!file_exists($holidayFilename)) {
     // 将今天的假日信息写入缓存文件
     file_put_contents($holidayFilename, $todayInfo['showapi_res_body']['type']);
 }
-
 // 判断今天是否非工作日，如果是则退出。
 $holidayInfo = file_get_contents($holidayFilename);
 if ($holidayInfo != '1') {
