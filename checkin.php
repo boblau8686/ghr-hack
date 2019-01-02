@@ -100,9 +100,9 @@ if (!file_exists($checkinFilename)) {
 
         // 签到完成发送通知邮件
         if ($checkResult['Msg'] == 'ok') {
-            $title = $todayNum . ' GHR签到成功';
+            $title = $todayNum . ' ' . date('H:i:s') . ' GHR签到成功';
         } else {
-            $title = '【签到失败】：' . $todayNum . ' GHR签到失败';
+            $title = '【签到失败】：' . $todayNum . ' ' . data('H:i:s') . ' GHR签到失败';
         }
         // 发送QQ邮件
         require_once 'extend/QQMailer.php';
