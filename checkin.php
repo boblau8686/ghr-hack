@@ -102,7 +102,7 @@ if (!file_exists($checkinFilename)) {
         if ($checkResult['Msg'] == 'ok') {
             $title = $todayNum . ' ' . date('H:i:s') . ' GHR签到成功';
         } else {
-            $title = '【签到失败】：' . $todayNum . ' ' . data('H:i:s') . ' GHR签到失败';
+            $title = '【签到失败】：' . $todayNum . ' ' . date('H:i:s') . ' GHR签到失败';
         }
         // 发送QQ邮件
         require_once 'extend/QQMailer.php';
