@@ -57,7 +57,7 @@ $checkinUrl = $baseUrl . $checkinMethod;
 curl_setopt($ch, CURLOPT_URL, $checkinUrl);
 
 // 随机签到分钟数
-$amRandMinute = rand(1, 58);
+$amRandMinute = rand(30, 58);
 $pmRandMinute = rand($amRandMinute, 59);
 
 // 签到日志字符串
